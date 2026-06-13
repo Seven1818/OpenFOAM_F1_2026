@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      decomposeParDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+numberOfSubdomains 32;
+
+decomposer      hierarchical;  //split the domain in structured directions
+distributor     scotch; // was ptscotch graph partionting algorithm
+// distributor     zoltan;
+// libs            ("libzoltanDecomp.so");
+
+hierarchicalCoeffs
+{
+    n               (4 4 2); //divide 4 times along x, 4 times along y and 2 times along z
+    order           xyz;
+}
+
+zoltanCoeffs
+{
+    lb_method       hypergraph;
+    lb_approach     partition;
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      meshQualityDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Include defaults parameters from master dictionary
+#includeEtc "caseDicts/mesh/generation/meshQualityDict"
+
+//- minFaceWeight (0 -> 0.5)
+minFaceWeight 0.05;
+// Recommended base mesh quality targets
+maxNonOrtho         60;    // 65 ideal; 70 acceptable for complex geometry
+maxBoundarySkewness  4; //was 20 before, reduced for better perfomance
+maxInternalSkewness  2; // higher accuracy
+maxConcave           70;
+minFlatness          0.5;
+minVol               1e-13;
+minTetQuality        1e-15;
+minArea              -1;
+minTwist             0.005;
+minDeterminant       0.01;
+minVolRatio          0.01;
+minTriangleTwist     -1;
+nSmoothScale         4;
+errorReduction       0.75;
+
+writeMeshQuality yes;
+// ************************************************************************* //

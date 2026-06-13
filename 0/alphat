@@ -1,0 +1,36 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      alphat;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -1 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet           { type calculated; value uniform 0; }
+    outlet          { type calculated; value uniform 0; }
+    freestream      { type calculated; value uniform 0; }
+    upperWall       { type calculated; value uniform 0; }
+
+    lowerWall       { type compressible::alphatWallFunction; value uniform 0; }
+    car             { type compressible::alphatWallFunction; value uniform 0; }
+    FW              { type compressible::alphatWallFunction; value uniform 0; }
+    FWHL            { type compressible::alphatWallFunction; value uniform 0; }
+    RWHL            { type compressible::alphatWallFunction; value uniform 0; }
+    RW              { type compressible::alphatWallFunction; value uniform 0; }
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

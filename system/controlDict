@@ -1,0 +1,157 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solver          fluid;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime        9000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval  500;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+functions
+{
+    yPlus
+    {
+        type            yPlus;
+        libs            ("libfieldFunctionObjects.so");
+        executeControl  writeTime;   // compute at every write step
+        writeControl    writeTime;   // save at every write step
+    }
+
+    forceCoeffs
+    {
+        type            forceCoeffs;
+        libs            ("libforces.so");
+        executeControl  writeTime;
+        writeControl    writeTime;
+
+        patches         ("car");     // must match your patch name exactly you can add more patches!
+	pRef            101325; //Test!
+        rho             rho;
+        rhoInf          1.225;       // air density 
+
+        // Reference values at 300 km/h = 83 m/s
+        magUInf         91.7;
+        lRef            5;         // car reference length
+        Aref            0.7;         // frontal area 
+        CofR            (0 0 0);     // centre of rotation
+        liftDir         (0 0 1);     // Z = lift direction
+        dragDir         (1 0 0);     // X = drag direction
+        pitchAxis       (0 1 0);     // Y = pitch axis
+    }
+
+    wallShearStress
+    {
+        type            wallShearStress;
+        libs            ("libfieldFunctionObjects.so");
+        executeControl  writeTime;
+        writeControl    writeTime;
+        patches         ("FW");
+    }
+    residuals
+    {
+    type            residuals;
+    libs            ("libutilityFunctionObjects.so");
+    writeControl    timeStep;
+    writeInterval   1;
+
+    fields
+    (
+        U
+        p
+        k
+        omega
+        h
+        nut
+    );
+    }
+    probes_sidepod //adds a probe inside the sidepod
+{
+    type        probes;
+    libs        ("libsampling.so");
+    writeControl    timeStep;
+    writeInterval   1;
+    fields      (p U);
+    probeLocations
+    (
+        (1.19 0.6 0.5493)   // First point left upper corner
+	(1.19 0.6 0.52547)
+	(1.19 0.6 0.50165)
+	(1.19 0.55943 0.5493)   // Second column from outboard to inboard 
+        (1.19 0.55943 0.52547)
+        (1.19 0.55943 0.50165)
+	(1.19 0.51885 0.5493)   // Third column from outboard to inboard
+        (1.19 0.51885 0.52547)
+        (1.19 0.51885 0.50165)
+	(1.19 0.47828 0.54930)   // Fourth column from outboard to inboard
+        (1.19 0.47828 0.52547)
+        (1.19 0.47828 0.50165)
+	(1.19 0.43770 0.54930)   // Fifth column from outboard to inboard
+        (1.19 0.43770 0.52547)
+        (1.19 0.43770 0.50165)
+	(1.19 0.39713 0.54930)   // Last column from outboard to inboard
+        (1.19 0.39713 0.52547)
+        (1.19 0.39713 0.50165)   
+    );
+}
+probes_airbox //adds a probe inside the airbox
+{
+    type        probes;
+    libs        ("libsampling.so");
+    writeControl    timeStep;
+    writeInterval   1;
+    fields      (p U);
+    probeLocations
+    (
+        (1.85 0.1261 0.8975)   // First point outboard
+	(1.85 0.10667 0.930)	//Second column
+	(1.85 0.10667 0.8975)
+	(1.85 0.10667 0.865) 
+	(1.85 0.08 0.930)   //Third column
+        (1.85 0.08 0.8975)
+        (1.85 0.08 0.865)
+	(1.85 0.05333 0.930)   //Fourth column
+        (1.85 0.05333 0.8975)
+        (1.85 0.05333 0.865)
+	(1.85 0.02667 0.930)   //Last column
+        (1.85 0.02667 0.8975)
+        (1.85 0.02667 0.865)
+    );
+}
+}
+
+// ************************************************************************* //

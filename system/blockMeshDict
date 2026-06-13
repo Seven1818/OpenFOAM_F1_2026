@@ -1,0 +1,87 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1; //you can also write 0.001 if the geometry is in mm  then scale by 1, cleaner
+vertices //define the vertices of your rectangle, here cut in half for symmetry
+(
+    (-10 0 0) //bottom left inlet
+    (30 0 0) //bottom left outlet
+    (30  8 0) //bottom right outlet
+    (-10  8 0) //bottom right inlet
+    (-10 0 6) //top left inlet
+    (30 0 6) //top left outlet
+    (30  8 6) //top right outlet
+    (-10  8 6) //top left inlet
+);
+
+blocks //creates hexaheadreal block using 8 vertices with the indices 0-7
+(
+    hex (0 1 2 3 4 5 6 7) (128 64 32) simpleGrading (1 1 1) //128 cells in x, 64 cells in y 32 cells in z, simple grading defines cell size stretching 1 is unifrom <1 cells shrink, >1 grow on one side
+);
+
+boundary
+(
+    symmetry //freestream sides (both sides)
+    {
+        type symmetry; //Symmetry plane or patch
+        faces
+        (
+            (1 5 4 0) //these are vertices 1,5,4,0
+        );
+    }
+    freestream          // ← separate patch for the outer +y side
+    {
+        type patch;
+        faces
+        (
+            (3 7 6 2)   // y=8 face — moved here from symmetry
+        );
+    }
+    inlet //name of patch
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3) //defines the vertices
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (2 6 5 1)
+        );
+    }
+    lowerWall
+    {
+        type wall;
+        faces
+        (
+            (0 3 2 1)
+        );
+    }
+    upperWall
+    {
+        type patch;
+        faces
+        (
+            (4 5 6 7)
+        );
+    }
+);
+
+// ************************************************************************* //

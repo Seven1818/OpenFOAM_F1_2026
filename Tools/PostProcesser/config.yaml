@@ -1,0 +1,40 @@
+# ── OpenFOAM Post-Processing Config ──
+# Copy this file into your case directory and adjust paths/labels.
+# Run:  python run.py --config config.yaml
+
+report:
+  title: "CFD Post-Processing Report"
+  author: "M. Toffoli"
+  case_name: "F1_C3"
+  description: "C3 case"
+  expert_mode: true
+
+plots:
+  - type: residuals
+    file: postProcessing/residuals/0/residuals.dat
+    section: Residuals
+
+  - type: yplus
+    file: postProcessing/yPlus/0/yPlus.dat
+    section: "Wall Y+"
+
+  - type: image
+    file: postProcessing/images/foam_render.png
+    caption: "Pressure & Streamlines"
+    section: "Flow Visualisation"
+  
+  - type: Cd
+    file: postProcessing/forceCoeffs/0/forceCoeffs.dat
+    section: "Aerodynamic Coefficients"
+
+  - type: Cl
+    file: postProcessing/forceCoeffs/0/forceCoeffs.dat
+    section: "Aerodynamic Coefficients"
+  
+  - type: Airbox_probes
+    file: postProcessing/probes_airbox/0/p
+    section: "Airbox Rake Probes"
+
+  - type: Sidepod_probes
+    file: postProcessing/probes_sidepod/0/p
+    section: "Sidepod Rake Probes"

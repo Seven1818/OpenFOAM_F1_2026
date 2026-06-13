@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeaturesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaces (
+    "F1_car_m_half.stl"
+    "F1_FW_m_half.stl"
+    "F1_RW_m_half.stl"
+    "F1_FWHL_m_half.stl"
+    "F1_RWHL_m_half.stl"
+    );
+
+
+// Identify a feature when angle between faces < includedAngle
+includedAngle       45;
+
+subsetFeatures
+{
+    // Keep nonManifold edges (edges with >2 connected faces)
+    nonManifoldEdges       yes;
+
+    // Keep open edges (edges with 1 connected face)
+    openEdges       yes;
+}
+
+// ************************************************************************* //
